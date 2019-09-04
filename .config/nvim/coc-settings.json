@@ -1,0 +1,11 @@
+{
+  "yaml.schemas": {
+    "kubernetes": "/*.yaml",
+    "http://json.schemastore.org/ansible-stable-2.5": "/*.yml",
+    "https://raw.githubusercontent.com/docker/cli/master/cli/compose/schema/data/config_schema_v3.8.json": "/docker-compose.*yml",
+    "http://json.schemastore.org/gitlab-ci": "/.gitlab-ci.yml"
+  },
+  "yaml.validate": true,
+  "yaml.format.enable": true,
+  "yaml.completion": true,
+}
