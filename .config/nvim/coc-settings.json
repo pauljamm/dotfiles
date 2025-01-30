@@ -8,4 +8,17 @@
   "yaml.validate": true,
   "yaml.format.enable": true,
   "yaml.completion": true,
+  "cSpellExt.enableDictionaries": ["russian"],
+  "cSpell.language": "en,ru",
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-lsp",
+      "filetypes": [
+        "terraform",
+        "tf"
+      ],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  }
 }
