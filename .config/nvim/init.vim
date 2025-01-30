@@ -3,10 +3,12 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'junegunn/vim-easy-align'
 Plug 'scrooloose/nerdtree'
 Plug 'KeitaNakamura/neodark.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 Plug 'ryanoasis/vim-devicons'
 Plug 'Yggdroot/indentLine'
@@ -14,6 +16,7 @@ Plug 'SirVer/ultisnips'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+Plug 'nvim-treesitter/nvim-treesitter'
 
 call plug#end()
 
@@ -34,9 +37,30 @@ set smartcase
 set hlsearch
 set incsearch
 
+" TextEdit might fail if hidden is not set.
+set hidden
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+set updatetime=300
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("nvim-0.5.0") || has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
 set keymap=russian-jcukenwin
 set iminsert=0
 set imsearch=0
+
+" use system clipboard
+set clipboard=unnamed
 
 set timeoutlen=1000 ttimeoutlen=1
 
@@ -79,6 +103,7 @@ let NERDTreeDirArrowExpandable = "\u00a0"
 let NERDTreeDirArrowCollapsible = "\u00a0"
 let g:WebDevIconsOS = 'Darwin'
 
+let NERDTreeShowHidden=1
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -130,16 +155,18 @@ set fillchars+=vert:\
   endif
 " endif
 
+let g:airline_theme='one'
 let g:airline_powerline_fonts = 1
 let g:tmuxline_preset = 'powerline'
 let g:airline_section_a = airline#section#create(['mode', 'crypt', 'paste', 'spell', 'iminsert'])
 
 let g:indentLine_char = '┊'
-let g:indentLine_fileType = ['yaml', 'yml', 'yaml.helm']
+let g:indentLine_fileType = ['yaml', 'yml', 'yaml.helm', 'yaml.custom']
 
 autocmd BufNewFile,BufRead *.py set colorcolumn=80
 
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 syntax on
-colorscheme neodark
+set background=dark
+colorscheme one
