@@ -97,7 +97,6 @@ install_packages() {
     "jq"
     "htop"
     "wget"
-    "curl"
     "zsh"
   )
   
