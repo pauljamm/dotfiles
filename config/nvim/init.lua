@@ -176,6 +176,38 @@ require("lazy").setup({
     { "ga", "<Plug>(EasyAlign)", mode = "x", desc = "Easy Align (Visual)" },
     { "ga", "<Plug>(EasyAlign)", mode = "n", desc = "Easy Align (Normal)" }
   }},
+  { "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+      require("nvim-autopairs").setup({
+        check_ts = true,  -- Интеграция с treesitter
+        ts_config = {
+          lua = {'string'},  -- Не добавлять пары в строках lua
+          javascript = {'template_string'},
+          java = false,  -- Не проверять treesitter в java
+        },
+        disable_filetype = { "TelescopePrompt", "vim" },
+        fast_wrap = {
+          map = "<M-e>",  -- Alt+e для быстрого оборачивания
+          chars = { "{", "[", "(", '"', "'" },
+          pattern = [=[[%'%"%)%>%]%)%}%,]]=],
+          end_key = "$",
+          keys = "qwertyuiopzxcvbnmasdfghjkl",
+          check_comma = true,
+          highlight = "Search",
+          highlight_grey = "Comment"
+        },
+      })
+      
+      -- Интеграция с nvim-cmp, если он используется
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      local cmp = require('cmp')
+      cmp.event:on(
+        'confirm_done',
+        cmp_autopairs.on_confirm_done()
+      )
+    end
+  },
   
   -- LSP и автодополнение
   { "neovim/nvim-lspconfig" },           -- Базовая конфигурация LSP
