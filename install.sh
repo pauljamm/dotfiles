@@ -186,7 +186,6 @@ setup_neovim() {
   
   # Создание символических ссылок для конфигурации Neovim
   link_file "${BASEDIR}/config/nvim/init.lua" "$HOME/.config/nvim/init.lua"
-  link_file "${BASEDIR}/config/nvim/coc-settings.json" "$HOME/.config/nvim/coc-settings.json"
   
   # Lazy.nvim устанавливается автоматически при первом запуске Neovim
   # через код в init.lua, поэтому просто запускаем Neovim для установки плагинов
