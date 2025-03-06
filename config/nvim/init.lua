@@ -75,6 +75,44 @@ vim.opt.rtp:prepend(lazypath)
 -- Загрузка плагинов
 require("lazy").setup({
   -- Интерфейс и внешний вид
+  { "nvimdev/dashboard-nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VimEnter",
+    config = function()
+      require("dashboard").setup({
+        theme = "doom",
+        config = {
+          header = {
+            "                                                     ",
+            "  ███▄    █ ▓█████  ▒█████   ██▒   █▓ ██▓ ███▄ ▄███▓ ",
+            "  ██ ▀█   █ ▓█   ▀ ▒██▒  ██▒▓██░   █▒▓██▒▓██▒▀█▀ ██▒ ",
+            " ▓██  ▀█ ██▒▒███   ▒██░  ██▒ ▓██  █▒░▒██▒▓██    ▓██░ ",
+            " ▓██▒  ▐▌██▒▒▓█  ▄ ▒██   ██░  ▒██ █░░░██░▒██    ▒██  ",
+            " ▒██░   ▓██░░▒████▒░ ████▓▒░   ▒▀█░  ░██░▒██▒   ░██▒ ",
+            " ░ ▒░   ▒ ▒ ░░ ▒░ ░░ ▒░▒░▒░    ░ ▐░  ░▓  ░ ▒░   ░  ░ ",
+            " ░ ░░   ░ ▒░ ░ ░  ░  ░ ▒ ▒░    ░ ░░   ▒ ░░  ░      ░ ",
+            "    ░   ░ ░    ░   ░ ░ ░ ▒       ░░   ▒ ░░      ░    ",
+            "          ░    ░  ░    ░ ░        ░   ░         ░    ",
+            "                                 ░                   ",
+            "                                                     "
+          },
+          center = {
+            { icon = " ", key = "f", desc = "Find File" },
+            { icon = " ", key = "n", desc = "New File" },
+            { icon = " ", key = "g", desc = "Find Text" },
+            { icon = " ", key = "r", desc = "Recent Files" },
+            { icon = " ", key = "c", desc = "Config" },
+            { icon = " ", key = "s", desc = "Restore Session" },
+            { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+          },
+          footer = {
+            "adsfadsf"
+          },
+          vertical_center = true,
+        }
+      })
+    end
+  },
   { "joshdick/onedark.vim" },
   { "rakr/vim-one" },
   { "vim-airline/vim-airline" },
