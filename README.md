@@ -46,7 +46,16 @@ cd dotfiles
 1. Откройте iTerm2 → Preferences → Profiles → Text
 2. Выберите "Font" и найдите "Hack Nerd Font" в списке
 3. Рекомендуемый размер: 12-16pt
-4. Включите опцию "Use a different font for non-ASCII text" и также выберите "Hack Nerd Font" для не-ASCII символов
+
+### Установка цветовой схемы One Dark для iTerm2
+
+В репозитории включен файл цветовой схемы One Dark для iTerm2.
+
+Для установки:
+1. Откройте iTerm2 → Preferences → Profiles → Colors
+2. Нажмите на кнопку "Color Presets..." в правом нижнем углу
+3. Выберите "Import..." и найдите файл `one-dark.itermcolors` в репозитории
+4. После импорта снова нажмите "Color Presets..." и выберите "One Dark" из списка
 
 ## Требования
 
