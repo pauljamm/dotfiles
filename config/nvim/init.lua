@@ -101,7 +101,27 @@ require("lazy").setup({
           },
           center = {
             { icon = " ", key = "f", desc = "Find File" },
-            { icon = " ", key = "n", desc = "New File" },
+            { icon = " ", key = "n", desc = "New File",
+               action = function()
+                 local filename = vim.fn.input({
+                   prompt = "Введите имя файла: ",
+                   default = "",
+                   completion = "file"
+                 })
+
+                 if filename and filename ~= "" then
+                   -- Создаем директории, если они не существуют
+                   local dir = vim.fn.fnamemodify(filename, ":h")
+                   if dir ~= "." and vim.fn.isdirectory(dir) == 0 then
+                     vim.fn.mkdir(dir, "p")
+                   end
+
+                   -- Открываем новый файл
+                   vim.cmd("edit " .. filename)
+                   vim.notify("Создан новый файл: " .. filename, vim.log.levels.INFO)
+                 end
+               end 
+            },
             { icon = " ", key = "g", desc = "Find Text" },
             { icon = " ", key = "r", desc = "Recent Files" },
             { icon = " ", key = "c", desc = "Config" },
