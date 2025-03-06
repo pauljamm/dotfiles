@@ -100,7 +100,7 @@ require("lazy").setup({
             "                                                     "
           },
           center = {
-            { icon = " ", key = "f", desc = "Find File" },
+            { icon = " ", key = "f", desc = "[Not Implemented] Find File" },
             { icon = " ", key = "n", desc = "New File",
                action = function()
                  local filename = vim.fn.input({
@@ -122,10 +122,10 @@ require("lazy").setup({
                  end
                end 
             },
-            { icon = " ", key = "g", desc = "Find Text" },
-            { icon = " ", key = "r", desc = "Recent Files" },
-            { icon = " ", key = "c", desc = "Config" },
-            { icon = " ", key = "s", desc = "Restore Session" },
+            { icon = " ", key = "g", desc = "[Not Implemented] Find Text" },
+            { icon = " ", key = "r", desc = "[Not Implemented] Recent Files" },
+            { icon = " ", key = "c", desc = "[Not Implemented] Config" },
+            { icon = " ", key = "s", desc = "[Not Implemented] Restore Session" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
           footer = {
