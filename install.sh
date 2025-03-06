@@ -185,21 +185,13 @@ setup_neovim() {
   mkdir -p "$HOME/.config/nvim"
   
   # Создание символических ссылок для конфигурации Neovim
-  link_file "${BASEDIR}/config/nvim/init.vim" "$HOME/.config/nvim/init.vim"
+  link_file "${BASEDIR}/config/nvim/init.lua" "$HOME/.config/nvim/init.lua"
   link_file "${BASEDIR}/config/nvim/coc-settings.json" "$HOME/.config/nvim/coc-settings.json"
   
-  # Установка менеджера плагинов для Neovim (vim-plug)
-  if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
-    log info "Установка vim-plug для Neovim"
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    
-    # Установка плагинов
-    log info "Установка плагинов для Neovim"
-    nvim --headless +PlugInstall +qall
-  else
-    log info "vim-plug для Neovim уже установлен"
-  fi
+  # Lazy.nvim устанавливается автоматически при первом запуске Neovim
+  # через код в init.lua, поэтому просто запускаем Neovim для установки плагинов
+  log info "Установка плагинов для Neovim"
+  nvim --headless "+Lazy! sync" +qa
 }
 
 # Основная функция
