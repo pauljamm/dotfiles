@@ -120,8 +120,57 @@ require("lazy").setup({
   },
   { "joshdick/onedark.vim" },
   { "rakr/vim-one" },
-  { "vim-airline/vim-airline" },
-  { "vim-airline/vim-airline-themes" },
+  { "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("lualine").setup({
+        options = {
+          icons_enabled = true,
+          theme = "onedark",
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = {
+            statusline = { "dashboard", "alpha" },
+            winbar = {},
+          },
+          ignore_focus = {},
+          always_divide_middle = true,
+          globalstatus = true,
+          refresh = {
+            statusline = 500,
+            tabline = 1000,
+            winbar = 1000,
+          }
+        },
+        sections = {
+          lualine_a = { { "mode", separator = { left = '' }, right_padding = 2 } },
+          lualine_b = { { "branch", "diff", "diagnostics", separator = { right = '' }, left_padding = 2 } },
+          lualine_c = {
+            {
+              "filename",
+              file_status = true,
+              path = 1, -- 0 = just filename, 1 = relative path, 2 = absolute path
+            }
+          },
+          lualine_x = { "encoding", "fileformat", "filetype" },
+          lualine_y = { { "progress", separator = { left = '' }, right_padding = 2 } },
+          lualine_z = { { "location", separator = { right = '' }, left_padding = 2 } }
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { "filename" },
+          lualine_x = { "location" },
+          lualine_y = {},
+          lualine_z = {}
+        },
+        tabline = {},
+        winbar = {},
+        inactive_winbar = {},
+        extensions = { "nvim-tree", "fugitive" }
+      })
+    end
+  },
   { "Yggdroot/indentLine", config = function()
     vim.g.indentLine_char = '┊'
     vim.g.indentLine_fileType = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'}
@@ -172,6 +221,7 @@ require("lazy").setup({
   { "christoomey/vim-tmux-navigator" },
   { "edkolev/tmuxline.vim", config = function()
     vim.g.tmuxline_preset = 'powerline'
+    vim.g.tmuxline_theme = 'onedark'
   end },
   
   -- Редактирование и форматирование
@@ -307,10 +357,7 @@ require("lazy").setup({
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardHeader guifg=#E06C75')
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardFooter guifg=#E06C75')
 
--- Настройка Airline
-vim.g.airline_theme = 'one'
-vim.g.airline_powerline_fonts = 1
-vim.g.airline_section_a = vim.fn["airline#section#create"]({'mode', 'crypt', 'paste', 'spell', 'iminsert'})
+-- Настройка цветовой схемы для lualine происходит в конфигурации плагина
 
 -- Настройка Mason (менеджер LSP серверов)
 require("mason").setup({
