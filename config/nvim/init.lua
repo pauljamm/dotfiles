@@ -1,3 +1,7 @@
+-- Отключение netrw для использования nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Базовые настройки
 vim.opt.showcmd = true
 vim.opt.cmdheight = 1
@@ -75,24 +79,51 @@ require("lazy").setup({
   { "rakr/vim-one" },
   { "vim-airline/vim-airline" },
   { "vim-airline/vim-airline-themes" },
-  { "ryanoasis/vim-devicons" },
   { "Yggdroot/indentLine", config = function()
     vim.g.indentLine_char = '┊'
     vim.g.indentLine_fileType = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'}
   end },
   
   -- Навигация и файловый менеджер
-  { "scrooloose/nerdtree", keys = {
-    { "<C-n>", ":NERDTreeToggle<CR>", desc = "Toggle NERDTree" }
-  }, config = function()
-    vim.g.WebDevIconsUnicodeDecorateFolderNodes = 1
-    vim.g.DevIconsEnableFoldersOpenClose = 1
-    vim.cmd("highlight! link NERDTreeFlags NERDTreeDir")
-    -- vim.g.NERDTreeDirArrowExpandable = "\u00a0"
-    -- vim.g.NERDTreeDirArrowCollapsible = "\u00a0"
-    vim.g.WebDevIconsOS = 'Darwin'
-    vim.g.NERDTreeShowHidden = 1
-  end },
+  { "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { "<C-n>", ":NvimTreeToggle<CR>", desc = "Toggle NvimTree" }
+    },
+    config = function()
+      require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+        view = {
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+          icons = {
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+              git = true,
+            },
+          },
+        },
+        filters = {
+          dotfiles = false,
+        },
+        git = {
+          enable = true,
+          ignore = false,
+        },
+        actions = {
+          open_file = {
+            quit_on_open = false,
+            resize_window = true,
+          },
+        },
+      })
+    end
+  },
+  { "nvim-tree/nvim-web-devicons" },
   
   -- Интеграция с Tmux
   { "christoomey/vim-tmux-navigator" },
