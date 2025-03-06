@@ -106,9 +106,11 @@ require("lazy").setup({
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
           footer = {
-            "adsfadsf"
+            "Let the blood begin!"
           },
           vertical_center = true,
+          header_highlight = "DashboardHeader",
+          footer_highlight = "DashboardFooter"
         }
       })
     end
@@ -191,6 +193,10 @@ require("lazy").setup({
   -- Синтаксический анализ
   { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" }
 })
+
+-- Цвета для дашборда
+vim.api.nvim_command('autocmd ColorScheme * highlight DashboardHeader guifg=#E06C75')
+vim.api.nvim_command('autocmd ColorScheme * highlight DashboardFooter guifg=#E06C75')
 
 -- Настройка Airline
 vim.g.airline_theme = 'one'
