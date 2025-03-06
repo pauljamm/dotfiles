@@ -159,7 +159,7 @@ prompt_dir() {
 }
 
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-source $HOME/Library/Python/3.9/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper.sh
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
