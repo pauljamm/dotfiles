@@ -96,8 +96,12 @@ install_packages() {
     "eza"
     "jq"
     "htop"
+    "gotop"
     "wget"
     "zsh"
+    "virtualenvwrapper"
+    "kubectl"
+    "helm"
   )
   
   for package in "${PACKAGES[@]}"; do
