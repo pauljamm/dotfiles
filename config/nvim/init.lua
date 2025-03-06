@@ -1,3 +1,6 @@
+-- Настройка лидер-клавиши
+vim.g.mapleader = " " -- Пробел как leader-клавиша
+
 -- Отключение netrw для использования nvim-tree
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -207,6 +210,65 @@ require("lazy").setup({
         cmp_autopairs.on_confirm_done()
       )
     end
+  },
+  { "numToStr/Comment.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("Comment").setup({
+        -- Добавляем поддержку для JSX/TSX
+        pre_hook = function(ctx)
+          local U = require("Comment.utils")
+          
+          -- Определяем, находимся ли мы в jsx/tsx контексте
+          local location = nil
+          if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == "javascriptreact" then
+            location = require("ts_context_commentstring.utils").get_cursor_location()
+          elseif vim.bo.filetype == "vue" or vim.bo.filetype == "svelte" then
+            location = require("ts_context_commentstring.utils").get_cursor_location()
+          end
+          
+          if location == "comment" then
+            return
+          end
+          
+          local node_type = nil
+          if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == "javascriptreact" then
+            node_type = require("ts_context_commentstring.utils").get_node_type()
+          elseif vim.bo.filetype == "vue" or vim.bo.filetype == "svelte" then
+            node_type = require("ts_context_commentstring.utils").get_node_type()
+          end
+          
+          if node_type == "jsx_element" or node_type == "jsx_fragment" or
+             node_type == "vue_element" or node_type == "svelte_element" then
+            local U = require("Comment.utils")
+            
+            -- Определяем тип комментария
+            local type = ctx.ctype == U.ctype.line and "__default" or "__multiline"
+            
+            -- Определяем строки комментария
+            local location_end = nil
+            if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == "javascriptreact" then
+              location_end = require("ts_context_commentstring.utils").get_node_type()
+            elseif vim.bo.filetype == "vue" or vim.bo.filetype == "svelte" then
+              location_end = require("ts_context_commentstring.utils").get_node_type()
+            end
+            
+            return require("ts_context_commentstring.internal").calculate_commentstring({
+              key = type,
+              location = location_end,
+            })
+          end
+        end,
+      })
+    end,
+    keys = {
+      { "gcc", desc = "Комментировать строку" },
+      { "gc", mode = "v", desc = "Комментировать выделение" },
+      { "gcb", desc = "Комментировать блок" },
+    },
+    dependencies = {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+    },
   },
   
   -- LSP и автодополнение
