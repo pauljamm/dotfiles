@@ -163,10 +163,12 @@ source $HOME/Library/Python/3.9/bin/virtualenvwrapper.sh
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
+# Улучшенные настройки для автопредложений
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=true
-ZSH_AUTOSUGGEST_HISTORY_IGNORE="?(#c100,)"
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd *|ls *|ll *|?(#c100,)"
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='fg=226,bold'
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='fg=203,bold'
 
