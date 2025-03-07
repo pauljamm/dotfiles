@@ -154,12 +154,23 @@ alias yckcl="yc k8s cluster list"
 alias -g jid="jq -r '.[].id'"
 alias ycj="yc --format json"
 
+# eza instead of ls
+eza_params=(
+  '--git' '--group' '--group-directories-first'
+)
+
+alias ls='eza $eza_params'
+alias ll='eza --long $eza_params'
+alias la='eza --long --all $eza_params'
+alias lal='eza -lbhHigUmuSa'
+alias tree='eza --tree $eza_params'
+
 prompt_dir() {
   prompt_segment blue black "%$(( $COLUMNS - 61 ))<...<%2~%<<"
 }
 
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-source $HOME/Library/Python/3.9/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper.sh
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
