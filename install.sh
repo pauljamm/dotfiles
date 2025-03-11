@@ -153,8 +153,14 @@ setup_oh_my_zsh() {
 setup_tmux() {
   log step "Настройка Tmux"
   
+  # Создание директории для tmux, если она не существует
+  mkdir -p "$HOME/.tmux"
+  
   # Создание символической ссылки для конфигурации tmux
   link_file "${BASEDIR}/tmux.conf" "$HOME/.tmux.conf"
+  
+  # Создание символической ссылки для темы tmux
+  link_file "${BASEDIR}/tmux/theme.conf" "$HOME/.tmux/theme.conf"
   
   # Установка менеджера плагинов для tmux
   if ! [ -d "$HOME/.tmux/plugins/tpm" ]; then
