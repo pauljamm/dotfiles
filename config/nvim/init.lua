@@ -236,14 +236,14 @@ require("lazy").setup({
     end
   },
   { "nvim-tree/nvim-web-devicons" },
-  
+
   -- Интеграция с Tmux
   { "christoomey/vim-tmux-navigator" },
   { "edkolev/tmuxline.vim", config = function()
     vim.g.tmuxline_preset = 'powerline'
     vim.g.tmuxline_theme = 'onedark'
   end },
-  
+
   -- Редактирование и форматирование
   { "junegunn/vim-easy-align", keys = {
     { "ga", "<Plug>(EasyAlign)", mode = "x", desc = "Easy Align (Visual)" },
@@ -271,7 +271,7 @@ require("lazy").setup({
           highlight_grey = "Comment"
         },
       })
-      
+
       -- Интеграция с nvim-cmp, если он используется
       local cmp_autopairs = require('nvim-autopairs.completion.cmp')
       local cmp = require('cmp')
