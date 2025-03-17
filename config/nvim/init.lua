@@ -120,19 +120,19 @@ local function get_random_tips(count)
     "Tip: ma устанавливает метку a, `a переходит к ней",
     "Tip: '. переходит к последнему изменению",
   }
-  
+
   -- Перемешиваем массив подсказок
   for i = #tips, 2, -1 do
     local j = math.random(i)
     tips[i], tips[j] = tips[j], tips[i]
   end
-  
+
   -- Возвращаем первые count элементов
   local result = {}
   for i = 1, count do
     table.insert(result, tips[i])
   end
-  
+
   return result
 end
 
@@ -204,7 +204,7 @@ require("lazy").setup({
             { icon = " ", key = "q", desc = "Quit", action = "qa" },
           },
           footer = function()
-            return get_random_tips(3)
+            return get_random_tips(1)
           end,
           vertical_center = true,
           header_highlight = "DashboardHeader",
