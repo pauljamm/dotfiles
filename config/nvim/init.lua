@@ -40,12 +40,7 @@ vim.opt.ttimeoutlen = 1
 vim.opt.backspace = "indent,eol,start"
 vim.opt.laststatus = 3
 vim.opt.encoding = "utf-8"
-vim.opt.fillchars:append({ vert = "│", vertleft = "┃", vertright = "┃", horiz = "━", horizup = "┻", horizdown = "┳", verthoriz = "╋" })
-
--- Настройка цвета разделителей окон
-vim.cmd([[
-  highlight WinSeparator guifg=#5c6370 guibg=NONE
-]])
+vim.opt.fillchars:append({ vert = "┃", vertleft = "┃", vertright = "┃", horiz = "━", horizup = "┻", horizdown = "┳", verthoriz = "╋" })
 
 -- Настройка постоянной истории
 if vim.fn.isdirectory("/tmp/.vim-undo-dir") == 0 then
@@ -756,3 +751,9 @@ vim.cmd([[
   set background=dark
   colorscheme one
 ]])
+
+-- Настройка цвета разделителей окон
+vim.cmd([[
+  highlight WinSeparator guifg=#2C323C guibg=NONE
+]])
+
