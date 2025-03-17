@@ -299,7 +299,11 @@ require("lazy").setup({
                 modified = " ●", -- Символ для измененных файлов
                 readonly = " ", -- Символ для файлов только для чтения
                 unnamed = "[No Name]", -- Имя для безымянных буферов
-              }
+              },
+              cond = function()
+                -- Показывать имя файла только если открыто 2 или более окон
+                return #vim.api.nvim_tabpage_list_wins(0) >= 2
+              end
             }
           },
           lualine_x = {},
@@ -319,7 +323,11 @@ require("lazy").setup({
                 modified = " ●",
                 readonly = " ",
                 unnamed = "[No Name]",
-              }
+              },
+              cond = function()
+                -- Показывать имя файла только если открыто 2 или более окон
+                return #vim.api.nvim_tabpage_list_wins(0) >= 2
+              end
             }
           },
           lualine_x = {},
