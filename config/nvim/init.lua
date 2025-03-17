@@ -296,14 +296,25 @@ require("lazy").setup({
               path = 1, -- 1 = относительный путь
               shorting_target = 40, -- Ограничение длины
               symbols = {
-                modified = " ●", -- Символ для измененных файлов
-                readonly = " ", -- Символ для файлов только для чтения
+                modified = " ✱", -- Символ для измененных файлов
+                readonly = " 󰏯", -- Символ для файлов только для чтения
                 unnamed = "[No Name]", -- Имя для безымянных буферов
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон
-                return #vim.api.nvim_tabpage_list_wins(0) >= 2
-              end
+                -- Показывать имя файла только если открыто 2 или более окон (не считая dashboard и nvim-tree)
+                local wins = vim.api.nvim_tabpage_list_wins(0)
+                local count = 0
+                for _, win in ipairs(wins) do
+                  local buf = vim.api.nvim_win_get_buf(win)
+                  local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+                  if ft ~= "dashboard" and ft ~= "NvimTree" then
+                    count = count + 1
+                  end
+                end
+                return count >= 2
+              end,
+              separator = { right = '' },
+              color = { bg = '#31353f', fg = '#8b929e' }
             }
           },
           lualine_x = {},
@@ -320,14 +331,25 @@ require("lazy").setup({
               path = 1,
               shorting_target = 40,
               symbols = {
-                modified = " ●",
-                readonly = " ",
+                modified = " ✱", -- Символ для измененных файлов
+                readonly = " 󰏯", -- Символ для файлов только для чтения
                 unnamed = "[No Name]",
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон
-                return #vim.api.nvim_tabpage_list_wins(0) >= 2
-              end
+                -- Показывать имя файла только если открыто 2 или более окон (не считая dashboard и nvim-tree)
+                local wins = vim.api.nvim_tabpage_list_wins(0)
+                local count = 0
+                for _, win in ipairs(wins) do
+                  local buf = vim.api.nvim_win_get_buf(win)
+                  local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+                  if ft ~= "dashboard" and ft ~= "NvimTree" then
+                    count = count + 1
+                  end
+                end
+                return count >= 2
+              end,
+              separator = { right = '' },
+              color = { bg = '#31353f', fg = '#8b929e' }
             }
           },
           lualine_x = {},
@@ -338,7 +360,7 @@ require("lazy").setup({
       })
     end
   },
-  { "Yggdroot/indentLine", 
+  { "Yggdroot/indentLine",
     ft = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'},
     config = function()
     vim.g.indentLine_char = '┊'
