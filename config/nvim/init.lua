@@ -61,6 +61,46 @@ if vim.fn.has("termguicolors") == 1 then
   vim.opt.termguicolors = true
 end
 
+-- Функция для получения случайных подсказок по Vim
+local function get_random_tips(count)
+  local tips = {
+    "Tip: <leader>ff для поиска файлов, <leader>fg для поиска текста",
+    "Tip: <C-n> открывает файловый менеджер NvimTree",
+    "Tip: <leader>gs показывает статус Git, <leader>gb для Git blame",
+    "Tip: gd переходит к определению под курсором (LSP)",
+    "Tip: K показывает документацию для элемента под курсором",
+    "Tip: <space>rn переименовывает символ под курсором",
+    "Tip: <space>ca показывает доступные code actions",
+    "Tip: gcc комментирует текущую строку, gc в визуальном режиме комментирует выделение",
+    "Tip: ga в визуальном режиме для выравнивания текста (EasyAlign)",
+    "Tip: <C-Space> вызывает автодополнение",
+    "Tip: <Tab> и <S-Tab> для навигации по меню автодополнения",
+    "Tip: gr показывает все ссылки на символ под курсором",
+    "Tip: <space>f форматирует текущий буфер или выделение",
+    "Tip: <C-b> и <C-f> для прокрутки документации в меню автодополнения",
+    "Tip: <M-e> для быстрого оборачивания текста в скобки/кавычки",
+    "Tip: <leader>fb показывает список открытых буферов",
+    "Tip: <leader>fh поиск по справке Neovim",
+    "Tip: Используйте русскую раскладку без переключения режимов",
+    "Tip: gcb комментирует блок кода",
+    "Tip: Используйте :Git для работы с Git репозиторием",
+  }
+  
+  -- Перемешиваем массив подсказок
+  for i = #tips, 2, -1 do
+    local j = math.random(i)
+    tips[i], tips[j] = tips[j], tips[i]
+  end
+  
+  -- Возвращаем первые count элементов
+  local result = {}
+  for i = 1, count do
+    table.insert(result, tips[i])
+  end
+  
+  return result
+end
+
 -- Настройка Lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -128,10 +168,9 @@ require("lazy").setup({
             { icon = "󱏒 ", key = "<C-n>", desc = "File Explorer (NvimTree)", action = "NvimTreeToggle" },
             { icon = " ", key = "q", desc = "Quit", action = "qa" },
           },
-          footer = {
-            "Tip: Используйте <leader>ff для поиска файлов, <leader>fg для поиска текста",
-            "Tip: <C-n> открывает файловый менеджер, <leader>gs показывает статус Git"
-          },
+          footer = function()
+            return get_random_tips(3)
+          end,
           vertical_center = true,
           header_highlight = "DashboardHeader",
           footer_highlight = "DashboardFooter"
@@ -141,7 +180,7 @@ require("lazy").setup({
   },
   { "joshdick/onedark.vim", priority = 1000 },
   { "rakr/vim-one", priority = 1000 },
-  
+
   -- Telescope для поиска файлов и текста
   { "nvim-telescope/telescope.nvim",
     dependencies = { 
