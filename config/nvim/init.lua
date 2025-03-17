@@ -138,10 +138,11 @@ require("lazy").setup({
       })
     end
   },
-  { "joshdick/onedark.vim" },
-  { "rakr/vim-one" },
+  { "joshdick/onedark.vim", priority = 1000 },
+  { "rakr/vim-one", priority = 1000 },
   { "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     config = function()
       require("lualine").setup({
         options = {
@@ -191,7 +192,9 @@ require("lazy").setup({
       })
     end
   },
-  { "Yggdroot/indentLine", config = function()
+  { "Yggdroot/indentLine", 
+    ft = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'},
+    config = function()
     vim.g.indentLine_char = '┊'
     vim.g.indentLine_fileType = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'}
   end },
@@ -199,6 +202,7 @@ require("lazy").setup({
   -- Навигация и файловый менеджер
   { "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "NvimTreeToggle",
     keys = {
       { "<C-n>", ":NvimTreeToggle<CR>", desc = "Toggle NvimTree" }
     },
@@ -239,7 +243,9 @@ require("lazy").setup({
 
   -- Интеграция с Tmux
   { "christoomey/vim-tmux-navigator" },
-  { "edkolev/tmuxline.vim", config = function()
+  { "edkolev/tmuxline.vim", 
+    cmd = {"Tmuxline", "TmuxlineSnapshot"},
+    config = function()
     vim.g.tmuxline_preset = 'powerline'
     vim.g.tmuxline_theme = 'onedark'
   end },
@@ -341,27 +347,32 @@ require("lazy").setup({
     },
   },
   
-  -- LSP и автодополнение
-  { "neovim/nvim-lspconfig" },           -- Базовая конфигурация LSP
-  { "hrsh7th/nvim-cmp" },                -- Движок автодополнения
-  { "hrsh7th/cmp-nvim-lsp" },            -- Источник LSP для nvim-cmp
-  { "hrsh7th/cmp-buffer" },              -- Дополнение из буфера
-  { "hrsh7th/cmp-path" },                -- Дополнение путей
-  { "hrsh7th/cmp-cmdline" },             -- Дополнение командной строки
-  { "L3MON4D3/LuaSnip" },                -- Движок сниппетов
-  { "saadparwaiz1/cmp_luasnip" },        -- Интеграция LuaSnip с cmp
-  { "rafamadriz/friendly-snippets" },    -- Коллекция сниппетов
-  { "williamboman/mason.nvim" },         -- Менеджер установки LSP серверов
-  { "williamboman/mason-lspconfig.nvim" },-- Интеграция mason с lspconfig
-  { "honza/vim-snippets" },
+  -- LSP и автодополнение (группировка для оптимизации)
+  { "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      { "hrsh7th/nvim-cmp", event = "InsertEnter" },
+      { "hrsh7th/cmp-nvim-lsp", event = "InsertEnter" },
+      { "hrsh7th/cmp-buffer", event = "InsertEnter" },
+      { "hrsh7th/cmp-path", event = "InsertEnter" },
+      { "hrsh7th/cmp-cmdline", event = "CmdlineEnter" },
+      { "L3MON4D3/LuaSnip", event = "InsertEnter" },
+      { "saadparwaiz1/cmp_luasnip", event = "InsertEnter" },
+      { "rafamadriz/friendly-snippets", event = "InsertEnter" },
+      { "williamboman/mason.nvim" },
+      { "williamboman/mason-lspconfig.nvim" },
+      { "honza/vim-snippets", event = "InsertEnter" },
+    }
+  },
   
   -- Git интеграция
-  { "airblade/vim-gitgutter" },
-  { "tpope/vim-fugitive" },
+  { "airblade/vim-gitgutter", event = { "BufReadPre", "BufNewFile" } },
+  { "tpope/vim-fugitive", cmd = {"Git", "Gstatus", "Gblame", "Gpush", "Gpull"} },
   
   -- Синтаксический анализ
   { "nvim-treesitter/nvim-treesitter", 
     build = ":TSUpdate",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "lua", "python", "bash", "yaml", "json", "markdown" },
@@ -371,11 +382,64 @@ require("lazy").setup({
       })
     end
   }
+}, {
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+    cache = {
+      enabled = true,
+    },
+    reset_packpath = true,
+  },
+  ui = {
+    icons = {
+      cmd = "⌘",
+      config = "🛠",
+      event = "📅",
+      ft = "📂",
+      init = "⚙",
+      keys = "🔑",
+      plugin = "🔌",
+      runtime = "💻",
+      source = "📄",
+      start = "🚀",
+      task = "📌",
+    },
+  },
 })
+
+-- Добавление команд для dashboard
+vim.api.nvim_create_user_command('DashboardFindFiles', function()
+  vim.cmd('Telescope find_files')
+end, {})
+
+vim.api.nvim_create_user_command('DashboardFindText', function()
+  vim.cmd('Telescope live_grep')
+end, {})
+
+vim.api.nvim_create_user_command('DashboardRecentFiles', function()
+  vim.cmd('Telescope oldfiles')
+end, {})
+
+-- Настройка сочетаний клавиш для Git
+vim.keymap.set('n', '<leader>gs', ':Git<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>gb', ':Git blame<CR>', { noremap = true, silent = true })
 
 -- Цвета для дашборда
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardHeader guifg=#E06C75')
-vim.api.nvim_command('autocmd ColorScheme * highlight DashboardFooter guifg=#E06C75')
+vim.api.nvim_command('autocmd ColorScheme * highlight DashboardFooter guifg=#98C379')
+vim.api.nvim_command('autocmd ColorScheme * highlight DashboardDesc guifg=#61AFEF')
+vim.api.nvim_command('autocmd ColorScheme * highlight DashboardKey guifg=#C678DD')
 
 -- Настройка цветовой схемы для lualine происходит в конфигурации плагина
 
