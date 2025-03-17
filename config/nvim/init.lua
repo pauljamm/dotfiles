@@ -38,7 +38,7 @@ vim.opt.clipboard = "unnamed"
 vim.opt.timeoutlen = 1000
 vim.opt.ttimeoutlen = 1
 vim.opt.backspace = "indent,eol,start"
-vim.opt.laststatus = 2
+vim.opt.laststatus = 3
 vim.opt.encoding = "utf-8"
 vim.opt.fillchars:append({ vert = "│", vertleft = "┃", vertright = "┃", horiz = "━", horizup = "┻", horizdown = "┳", verthoriz = "╋" })
 
