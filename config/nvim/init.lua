@@ -252,7 +252,7 @@ require("lazy").setup({
           section_separators = { left = "", right = "" },
           disabled_filetypes = {
             statusline = { "dashboard", "alpha" },
-            winbar = {},
+            winbar = { "dashboard", "alpha", "NvimTree" },
           },
           ignore_focus = {},
           always_divide_middle = true,
@@ -286,8 +286,46 @@ require("lazy").setup({
           lualine_z = {}
         },
         tabline = {},
-        winbar = {},
-        inactive_winbar = {},
+        winbar = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {
+            {
+              "filename",
+              file_status = true,
+              path = 1, -- 1 = относительный путь
+              shorting_target = 40, -- Ограничение длины
+              symbols = {
+                modified = " ●", -- Символ для измененных файлов
+                readonly = " ", -- Символ для файлов только для чтения
+                unnamed = "[No Name]", -- Имя для безымянных буферов
+              }
+            }
+          },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {}
+        },
+        inactive_winbar = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {
+            {
+              "filename",
+              file_status = true,
+              path = 1,
+              shorting_target = 40,
+              symbols = {
+                modified = " ●",
+                readonly = " ",
+                unnamed = "[No Name]",
+              }
+            }
+          },
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {}
+        },
         extensions = { "nvim-tree", "fugitive" }
       })
     end
