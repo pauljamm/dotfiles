@@ -100,8 +100,8 @@ require("lazy").setup({
             "                                                     "
           },
           center = {
-            { icon = "", key = "f", desc = "Find File", action = "Telescope find_files" },
-            { icon = "", key = "n", desc = "New File",
+            { icon = " ", key = "f", desc = "Find File", action = "Telescope find_files" },
+            { icon = " ", key = "n", desc = "New File",
                action = function()
                  local filename = vim.fn.input({
                    prompt = "Введите имя файла: ",
@@ -122,39 +122,11 @@ require("lazy").setup({
                  end
                end
             },
-            { icon = "", key = "g", desc = "Find Text", action = "Telescope live_grep" },
-            { icon = " ", key = "r", desc = "Recent Files", action = "Telescope oldfiles" },
-            { icon = " ", key = "c", desc = "Edit Config", action = "edit $MYVIMRC" },
-
-            -- Добавляем разделитель для группировки
-            { icon = "󰒓 ", key = "", desc = "───────────────────────────", action = "" },
-
-            -- Группа навигации
-            { icon = " ", key = "<C-n>", desc = "File Explorer (NvimTree)", action = "NvimTreeToggle" },
-            { icon = "󰮗 ", key = "<leader>ff", desc = "Find Files", action = "Telescope find_files" },
-            { icon = " ", key = "<leader>fg", desc = "Live Grep", action = "Telescope live_grep" },
-
-            -- Группа редактирования
-            { icon = "󰒓 ", key = "", desc = "───────────────────────────", action = "" },
-            { icon = "󰗧 ", key = "gcc", desc = "Comment Line", action = "" },
-            { icon = "󰗧 ", key = "gc", desc = "Comment Selection (visual)", action = "" },
-            { icon = " ", key = "ga", desc = "Easy Align", action = "" },
-
-            -- Группа LSP
-            { icon = "󰒓 ", key = "", desc = "───────────────────────────", action = "" },
-            { icon = " ", key = "gd", desc = "Go to Definition", action = "" },
-            { icon = "󰛔 ", key = "K", desc = "Show Documentation", action = "" },
-            { icon = "󰁨 ", key = "<leader>rn", desc = "Rename Symbol", action = "" },
-            { icon = " ", key = "<leader>ca", desc = "Code Actions", action = "" },
-
-            -- Группа Git
-            { icon = "󰒓 ", key = "", desc = "───────────────────────────", action = "" },
-            { icon = " ", key = "<leader>gs", desc = "Git Status", action = "Git" },
-            { icon = " ", key = "<leader>gb", desc = "Git Blame", action = "Git blame" },
-
-            -- Выход
-            { icon = "󰒓 ", key = "", desc = "───────────────────────────", action = "" },
-            { icon = "", key = "q", desc = "Quit", action = "qa" },
+            { icon = " ", key = "g", desc = "Find Text", action = "Telescope live_grep" },
+            { icon = " ", key = "r", desc = "Recent Files", action = "Telescope oldfiles" },
+            { icon = "󰒓 ", key = "c", desc = "Edit Config", action = "edit $MYVIMRC" },
+            { icon = "󱏒 ", key = "<C-n>", desc = "File Explorer (NvimTree)", action = "NvimTreeToggle" },
+            { icon = " ", key = "q", desc = "Quit", action = "qa" },
           },
           footer = {
             "Tip: Используйте <leader>ff для поиска файлов, <leader>fg для поиска текста",
