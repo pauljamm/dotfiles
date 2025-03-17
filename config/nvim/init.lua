@@ -195,7 +195,7 @@ require("lazy").setup({
     vim.g.indentLine_char = '┊'
     vim.g.indentLine_fileType = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'}
   end },
-  
+
   -- Навигация и файловый менеджер
   { "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -392,7 +392,7 @@ require("mason").setup({
 
 -- Интеграция Mason с lspconfig
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "pyright", "bashls" },
+  ensure_installed = { "lua_ls", "pyright", "bashls", "yamlls" },
   automatic_installation = true,
 })
 
@@ -538,6 +538,26 @@ lspconfig.bashls.setup {
   capabilities = capabilities,
   on_attach = on_attach,
 }
+
+ -- YAML и Kubernetes
+ lspconfig.yamlls.setup {
+   capabilities = capabilities,
+   on_attach = on_attach,
+   settings = {
+     yaml = {
+       schemas = {
+         ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.31.3/all.json"] = "*.yaml",
+         ["https://json.schemastore.org/chart.json"] = "Chart.yaml"
+       },
+       format = {
+         enable = true,
+       },
+       validate = true,
+       completion = true,
+       hover = true,
+     },
+   },
+ }
 
 -- Настройка диагностики
 vim.diagnostic.config({
