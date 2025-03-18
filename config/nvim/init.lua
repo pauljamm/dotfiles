@@ -255,7 +255,7 @@ require("lazy").setup({
             cmdline = { pattern = "^:", icon = "󰞷 ", lang = "vim" },
             search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
             search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
-            filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+            filter = { pattern = "^:%s*!", icon = "$ ", lang = "bash" },
             lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
             help = { pattern = "^:%s*he?l?p?%s+", icon = "󰋖 " },
             input = {}, -- Используется при запросе ввода
@@ -297,7 +297,7 @@ require("lazy").setup({
             },
             filter_options = {},
             win_options = {
-              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
+              winhighlight = "NormalFloat:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel",
               cursorline = true,
               winblend = 0,
             },
@@ -317,7 +317,7 @@ require("lazy").setup({
               padding = { 0, 1 },
             },
             win_options = {
-              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
+              winhighlight = "NormalFloat:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel",
               cursorline = true,
               winblend = 0,
             },
@@ -355,17 +355,22 @@ require("lazy").setup({
           -- Цвета для командной строки
           CmdlinePopupBorder = { fg = "#61afef" },
           CmdlinePopupTitle = { fg = "#61afef", bold = true },
+          CmdlinePopup = { bg = "#282c34" },
           
           -- Цвета для меню
           PopupmenuBorder = { fg = "#61afef" },
           PopupmenuTitle = { fg = "#61afef", bold = true },
           PopupmenuMatch = { fg = "#e5c07b" },
           PopupmenuSelected = { bg = "#3e4452", bold = true },
+          Popupmenu = { bg = "#282c34" },
           
           -- Цвета для сообщений
           NoiceMini = { bg = "#31353f" },
           NoiceConfirm = { bg = "#31353f" },
           NoiceConfirmBorder = { fg = "#61afef" },
+          
+          -- Общие цвета для всех окон
+          NormalFloat = { bg = "#282c34" },
         },
       })
     end
@@ -1051,8 +1056,10 @@ vim.cmd([[
   colorscheme one
 ]])
 
--- Настройка цвета разделителей окон
+-- Настройка цвета разделителей окон и фона плавающих окон
 vim.cmd([[
   highlight WinSeparator guifg=#2C323C guibg=NONE
+  highlight NormalFloat guibg=#282c34
+  highlight FloatBorder guifg=#61afef guibg=#282c34
 ]])
 
