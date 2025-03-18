@@ -350,28 +350,6 @@ require("lazy").setup({
           inc_rename = false, -- Включить inc_rename.nvim
           lsp_doc_border = true, -- Добавить рамку к окнам документации
         },
-        -- Настройка цветов для One Dark
-        -- highlights = {
-        --   -- Цвета для командной строки
-        --   CmdlinePopupBorder = { fg = "#5c6370" },
-        --   CmdlinePopupTitle = { fg = "#5c6370", bold = true },
-        --   CmdlinePopup = { bg = "#282c34" },
-
-        --   -- Цвета для меню
-        --   PopupmenuBorder = { fg = "#61afef" },
-        --   PopupmenuTitle = { fg = "#61afef", bold = true },
-        --   PopupmenuMatch = { fg = "#e5c07b" },
-        --   PopupmenuSelected = { bg = "#3e4452", bold = true },
-        --   Popupmenu = { bg = "#282c34" },
-
-        --   -- Цвета для сообщений
-        --   NoiceMini = { bg = "#31353f" },
-        --   NoiceConfirm = { bg = "#31353f" },
-        --   NoiceConfirmBorder = { fg = "#61afef" },
-
-        --   -- Общие цвета для всех окон
-        --   NormalFloat = { bg = "#282c34" },
-        -- },
       })
     end
   },
@@ -835,6 +813,12 @@ end, {})
 -- Настройка сочетаний клавиш для Git
 vim.keymap.set('n', '<leader>gs', ':Git<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>gb', ':Git blame<CR>', { noremap = true, silent = true })
+
+-- Настройка подсветки для git blame
+vim.api.nvim_command('autocmd ColorScheme * highlight GitBlameLineHighlight guibg=#31353f')
+vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "cursorline", true)')
+vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "cursorlineopt", "line")')
+vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "winhighlight", "CursorLine:GitBlameLineHighlight")')
 
 -- Цвета для дашборда
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardHeader guifg=#E06C75')
