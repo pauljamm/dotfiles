@@ -297,7 +297,9 @@ require("lazy").setup({
             },
             filter_options = {},
             win_options = {
-              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
+              cursorline = true,
+              winblend = 0,
             },
           },
           popupmenu = {
@@ -315,7 +317,9 @@ require("lazy").setup({
               padding = { 0, 1 },
             },
             win_options = {
-              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel",
+              cursorline = true,
+              winblend = 0,
             },
           },
         },
@@ -346,13 +350,30 @@ require("lazy").setup({
           inc_rename = false, -- Включить inc_rename.nvim
           lsp_doc_border = true, -- Добавить рамку к окнам документации
         },
+        -- Настройка цветов для One Dark
+        highlights = {
+          -- Цвета для командной строки
+          CmdlinePopupBorder = { fg = "#61afef" },
+          CmdlinePopupTitle = { fg = "#61afef", bold = true },
+          
+          -- Цвета для меню
+          PopupmenuBorder = { fg = "#61afef" },
+          PopupmenuTitle = { fg = "#61afef", bold = true },
+          PopupmenuMatch = { fg = "#e5c07b" },
+          PopupmenuSelected = { bg = "#3e4452", bold = true },
+          
+          -- Цвета для сообщений
+          NoiceMini = { bg = "#31353f" },
+          NoiceConfirm = { bg = "#31353f" },
+          NoiceConfirmBorder = { fg = "#61afef" },
+        },
       })
     end
   },
   { "rcarriga/nvim-notify",
     config = function()
       require("notify").setup({
-        background_colour = "#000000",
+        background_colour = "#282c34",
         fps = 60,
         icons = {
           DEBUG = "",
@@ -366,7 +387,40 @@ require("lazy").setup({
         render = "default",
         stages = "fade_in_slide_out",
         timeout = 3000,
-        top_down = true
+        top_down = true,
+        -- Стили для One Dark
+        highlights = {
+          ERROR = {
+            background = "#31353f",
+            title = "#e06c75",
+            icon = "#e06c75",
+            border = "#e06c75"
+          },
+          WARN = {
+            background = "#31353f",
+            title = "#e5c07b",
+            icon = "#e5c07b",
+            border = "#e5c07b"
+          },
+          INFO = {
+            background = "#31353f",
+            title = "#61afef",
+            icon = "#61afef",
+            border = "#61afef"
+          },
+          DEBUG = {
+            background = "#31353f",
+            title = "#56b6c2",
+            icon = "#56b6c2",
+            border = "#56b6c2"
+          },
+          TRACE = {
+            background = "#31353f",
+            title = "#c678dd",
+            icon = "#c678dd",
+            border = "#c678dd"
+          }
+        }
       })
 
       -- Установка notify как глобального уведомления
