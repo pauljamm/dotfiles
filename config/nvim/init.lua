@@ -506,11 +506,10 @@ require("lazy").setup({
                   local win_config = vim.api.nvim_win_get_config(win)
                   
                   -- Пропускаем всплывающие окна и специальные буферы
-                  if ft ~= "dashboard" and ft ~= "NvimTree" and 
+                  if ft ~= "dashboard" and ft ~= "NvimTree" and
                      ft ~= "noice" and ft ~= "notify" and
                      not win_config.relative and -- не всплывающее окно
-                     not vim.api.nvim_win_get_option(win, "previewwindow") and -- не окно предпросмотра
-                     vim.api.nvim_buf_get_option(buf, "buftype") == "" then -- обычный буфер
+                     not vim.api.nvim_win_get_option(win, "previewwindow") then -- не окно предпросмотра
                     count = count + 1
                   end
                 end
@@ -819,6 +818,73 @@ vim.api.nvim_command('autocmd ColorScheme * highlight GitBlameLineHighlight guib
 vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "cursorline", true)')
 vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "cursorlineopt", "line")')
 vim.api.nvim_command('autocmd FileType fugitiveblame lua vim.api.nvim_win_set_option(0, "winhighlight", "CursorLine:GitBlameLineHighlight")')
+
+-- Синхронизация подсветки строки между git blame и основным окном
+vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
+  pattern = "*",
+  callback = function()
+    -- Проверяем, открыто ли окно git blame
+    local blame_win = nil
+    local code_win = nil
+    
+    -- Находим окна git blame и основного кода
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+      
+      if ft == "fugitiveblame" then
+        blame_win = win
+      elseif vim.api.nvim_win_get_option(win, "cursorline") and ft ~= "fugitiveblame" then
+        code_win = win
+      end
+    end
+    
+    -- Если найдены оба окна, синхронизируем позицию курсора
+    if blame_win and code_win then
+      local current_win = vim.api.nvim_get_current_win()
+      local target_win = nil
+      local source_win = nil
+      
+      if current_win == blame_win then
+        source_win = blame_win
+        target_win = code_win
+      elseif current_win == code_win then
+        source_win = code_win
+        target_win = blame_win
+      end
+      
+      if source_win and target_win then
+        local cursor_pos = vim.api.nvim_win_get_cursor(source_win)
+        vim.api.nvim_win_set_cursor(target_win, {cursor_pos[1], 0})
+      end
+    end
+  end
+})
+
+-- Включаем подсветку строки в основном окне при открытии git blame
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "fugitiveblame",
+  callback = function()
+    -- Находим основное окно с кодом
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+      
+      if ft ~= "fugitiveblame" and ft ~= "NvimTree" and ft ~= "dashboard" then
+        -- Включаем подсветку строки в основном окне
+        vim.api.nvim_win_set_option(win, "cursorline", true)
+        vim.api.nvim_win_set_option(win, "cursorlineopt", "line")
+        vim.api.nvim_win_set_option(win, "winhighlight", "CursorLine:GitBlameLineHighlight")
+        
+        -- Синхронизируем позицию курсора
+        local blame_win = vim.api.nvim_get_current_win()
+        local cursor_pos = vim.api.nvim_win_get_cursor(blame_win)
+        vim.api.nvim_win_set_cursor(win, {cursor_pos[1], 0})
+        break
+      end
+    end
+  end
+})
 
 -- Цвета для дашборда
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardHeader guifg=#E06C75')
