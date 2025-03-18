@@ -826,6 +826,25 @@ vim.api.nvim_command('autocmd ColorScheme * highlight DashboardFooter guifg=#5c6
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardDesc guifg=#61AFEF')
 vim.api.nvim_command('autocmd ColorScheme * highlight DashboardKey guifg=#C678DD')
 
+-- Цвета для Noice
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceCmdlinePopupBorder guifg=#5c6370')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceCmdlinePopupTitle guifg=#5c6370 gui=bold')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceCmdlinePopup guibg=#282c34')
+
+vim.api.nvim_command('autocmd ColorScheme * highlight NoicePopupmenuBorder guifg=#61afef')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoicePopupmenuTitle guifg=#61afef gui=bold')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoicePopupmenuMatch guifg=#e5c07b')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoicePopupmenuSelected guibg=#3e4452 gui=bold')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoicePopupmenu guibg=#282c34')
+
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceMini guibg=#31353f')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceConfirm guibg=#31353f')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceConfirmBorder guifg=#61afef')
+
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatTitle guifg=#e5c07b gui=bold')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatProgressDone guibg=#98c379')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatProgressTodo guibg=#31353f')
+
 -- Настройка цветовой схемы для lualine происходит в конфигурации плагина
 
 -- Настройка Mason (менеджер LSP серверов)
