@@ -496,24 +496,21 @@ require("lazy").setup({
                 unnamed = "[No Name]", -- Имя для безымянных буферов
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон
-                -- Не учитываем dashboard, nvim-tree и всплывающие окна (noice, notify, lsp и т.д.)
-                local wins = vim.api.nvim_tabpage_list_wins(0)
-                local count = 0
-                for _, win in ipairs(wins) do
-                  local buf = vim.api.nvim_win_get_buf(win)
-                  local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-                  local win_config = vim.api.nvim_win_get_config(win)
-                  
-                  -- Пропускаем всплывающие окна и специальные буферы
-                  if ft ~= "dashboard" and ft ~= "NvimTree" and
-                     ft ~= "noice" and ft ~= "notify" and
-                     not win_config.relative and -- не всплывающее окно
-                     not vim.api.nvim_win_get_option(win, "previewwindow") then -- не окно предпросмотра
-                    count = count + 1
-                  end
+                -- Показывать имя файла в winbar для обычных буферов
+                local buf = vim.api.nvim_get_current_buf()
+                local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+                local bt = vim.api.nvim_buf_get_option(buf, "buftype")
+                local win_config = vim.api.nvim_win_get_config(0)
+                
+                -- Не показываем для специальных типов буферов и всплывающих окон
+                if ft == "dashboard" or ft == "NvimTree" or ft == "noice" or ft == "notify" or
+                   bt ~= "" or -- не обычный буфер (например, help, terminal и т.д.)
+                   win_config.relative ~= "" or -- всплывающее окно
+                   vim.api.nvim_win_get_option(0, "previewwindow") then -- окно предпросмотра
+                  return false
                 end
-                return count >= 2
+                
+                return true
               end,
               separator = { right = '' },
               color = { bg = '#31353f', fg = '#8b929e' }
@@ -538,25 +535,21 @@ require("lazy").setup({
                 unnamed = "[No Name]",
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон
-                -- Не учитываем dashboard, nvim-tree и всплывающие окна (noice, notify, lsp и т.д.)
-                local wins = vim.api.nvim_tabpage_list_wins(0)
-                local count = 0
-                for _, win in ipairs(wins) do
-                  local buf = vim.api.nvim_win_get_buf(win)
-                  local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-                  local win_config = vim.api.nvim_win_get_config(win)
-                  
-                  -- Пропускаем всплывающие окна и специальные буферы
-                  if ft ~= "dashboard" and ft ~= "NvimTree" and 
-                     ft ~= "noice" and ft ~= "notify" and
-                     not win_config.relative and -- не всплывающее окно
-                     not vim.api.nvim_win_get_option(win, "previewwindow") and -- не окно предпросмотра
-                     vim.api.nvim_buf_get_option(buf, "buftype") == "" then -- обычный буфер
-                    count = count + 1
-                  end
+                -- Показывать имя файла в winbar для обычных буферов
+                local buf = vim.api.nvim_get_current_buf()
+                local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+                local bt = vim.api.nvim_buf_get_option(buf, "buftype")
+                local win_config = vim.api.nvim_win_get_config(0)
+                
+                -- Не показываем для специальных типов буферов и всплывающих окон
+                if ft == "dashboard" or ft == "NvimTree" or ft == "noice" or ft == "notify" or
+                   bt ~= "" or -- не обычный буфер (например, help, terminal и т.д.)
+                   win_config.relative ~= "" or -- всплывающее окно
+                   vim.api.nvim_win_get_option(0, "previewwindow") then -- окно предпросмотра
+                  return false
                 end
-                return count >= 2
+                
+                return true
               end,
               separator = { right = '' },
               color = { bg = '#31353f', fg = '#8b929e' }
