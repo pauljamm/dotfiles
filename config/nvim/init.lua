@@ -351,27 +351,27 @@ require("lazy").setup({
           lsp_doc_border = true, -- Добавить рамку к окнам документации
         },
         -- Настройка цветов для One Dark
-        highlights = {
-          -- Цвета для командной строки
-          CmdlinePopupBorder = { fg = "#61afef" },
-          CmdlinePopupTitle = { fg = "#61afef", bold = true },
-          CmdlinePopup = { bg = "#282c34" },
-          
-          -- Цвета для меню
-          PopupmenuBorder = { fg = "#61afef" },
-          PopupmenuTitle = { fg = "#61afef", bold = true },
-          PopupmenuMatch = { fg = "#e5c07b" },
-          PopupmenuSelected = { bg = "#3e4452", bold = true },
-          Popupmenu = { bg = "#282c34" },
-          
-          -- Цвета для сообщений
-          NoiceMini = { bg = "#31353f" },
-          NoiceConfirm = { bg = "#31353f" },
-          NoiceConfirmBorder = { fg = "#61afef" },
-          
-          -- Общие цвета для всех окон
-          NormalFloat = { bg = "#282c34" },
-        },
+        -- highlights = {
+        --   -- Цвета для командной строки
+        --   CmdlinePopupBorder = { fg = "#5c6370" },
+        --   CmdlinePopupTitle = { fg = "#5c6370", bold = true },
+        --   CmdlinePopup = { bg = "#282c34" },
+
+        --   -- Цвета для меню
+        --   PopupmenuBorder = { fg = "#61afef" },
+        --   PopupmenuTitle = { fg = "#61afef", bold = true },
+        --   PopupmenuMatch = { fg = "#e5c07b" },
+        --   PopupmenuSelected = { bg = "#3e4452", bold = true },
+        --   Popupmenu = { bg = "#282c34" },
+
+        --   -- Цвета для сообщений
+        --   NoiceMini = { bg = "#31353f" },
+        --   NoiceConfirm = { bg = "#31353f" },
+        --   NoiceConfirmBorder = { fg = "#61afef" },
+
+        --   -- Общие цвета для всех окон
+        --   NormalFloat = { bg = "#282c34" },
+        -- },
       })
     end
   },
