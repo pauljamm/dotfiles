@@ -605,12 +605,17 @@ require("lazy").setup({
       })
     end
   },
-  { "Yggdroot/indentLine",
-    ft = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'},
+  { "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
     config = function()
-    vim.g.indentLine_char = '┊'
-    vim.g.indentLine_fileType = {'yaml', 'yml', 'yaml.helm', 'yaml.custom'}
-  end },
+      require("ibl").setup({
+        indent = {
+          char = "┊",
+        },
+        scope = { enabled = true },
+      })
+    end
+  },
 
   -- Навигация и файловый менеджер
   { "nvim-tree/nvim-tree.lua",
@@ -861,7 +866,7 @@ vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
     -- Проверяем, открыто ли окно git blame
     local blame_win = nil
     local code_win = nil
-    
+
     -- Находим окна git blame и основного кода
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       local buf = vim.api.nvim_win_get_buf(win)
@@ -873,13 +878,13 @@ vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
         code_win = win
       end
     end
-    
+
     -- Если найдены оба окна, синхронизируем позицию курсора
     if blame_win and code_win then
       local current_win = vim.api.nvim_get_current_win()
       local target_win = nil
       local source_win = nil
-      
+
       if current_win == blame_win then
         source_win = blame_win
         target_win = code_win
@@ -887,7 +892,7 @@ vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
         source_win = code_win
         target_win = blame_win
       end
-      
+
       if source_win and target_win then
         local cursor_pos = vim.api.nvim_win_get_cursor(source_win)
         vim.api.nvim_win_set_cursor(target_win, {cursor_pos[1], 0})
@@ -904,13 +909,13 @@ vim.api.nvim_create_autocmd("FileType", {
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       local buf = vim.api.nvim_win_get_buf(win)
       local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-      
+
       if ft ~= "fugitiveblame" and ft ~= "NvimTree" and ft ~= "dashboard" then
         -- Включаем подсветку строки в основном окне
         vim.api.nvim_win_set_option(win, "cursorline", true)
         vim.api.nvim_win_set_option(win, "cursorlineopt", "line")
         vim.api.nvim_win_set_option(win, "winhighlight", "CursorLine:GitBlameLineHighlight")
-        
+
         -- Синхронизируем позицию курсора
         local blame_win = vim.api.nvim_get_current_win()
         local cursor_pos = vim.api.nvim_win_get_cursor(blame_win)
