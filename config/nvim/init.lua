@@ -861,6 +861,13 @@ vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatTitle guifg=#e5
 vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatProgressDone guibg=#98c379')
 vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFormatProgressTodo guibg=#31353f')
 
+-- Цвета для иконок Noice
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceCmdlineIcon guifg=#61afef')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceSearchIcon guifg=#e5c07b')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceFilterIcon guifg=#98c379')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceLuaIcon guifg=#c678dd')
+vim.api.nvim_command('autocmd ColorScheme * highlight NoiceHelpIcon guifg=#56b6c2')
+
 -- Настройка цветовой схемы для lualine происходит в конфигурации плагина
 
 -- Настройка Mason (менеджер LSP серверов)
