@@ -518,13 +518,21 @@ require("lazy").setup({
                 unnamed = "[No Name]", -- Имя для безымянных буферов
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон (не считая dashboard и nvim-tree)
+                -- Показывать имя файла только если открыто 2 или более окон
+                -- Не учитываем dashboard, nvim-tree и всплывающие окна (noice, notify, lsp и т.д.)
                 local wins = vim.api.nvim_tabpage_list_wins(0)
                 local count = 0
                 for _, win in ipairs(wins) do
                   local buf = vim.api.nvim_win_get_buf(win)
                   local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-                  if ft ~= "dashboard" and ft ~= "NvimTree" then
+                  local win_config = vim.api.nvim_win_get_config(win)
+                  
+                  -- Пропускаем всплывающие окна и специальные буферы
+                  if ft ~= "dashboard" and ft ~= "NvimTree" and 
+                     ft ~= "noice" and ft ~= "notify" and
+                     not win_config.relative and -- не всплывающее окно
+                     not vim.api.nvim_win_get_option(win, "previewwindow") and -- не окно предпросмотра
+                     vim.api.nvim_buf_get_option(buf, "buftype") == "" then -- обычный буфер
                     count = count + 1
                   end
                 end
@@ -553,13 +561,21 @@ require("lazy").setup({
                 unnamed = "[No Name]",
               },
               cond = function()
-                -- Показывать имя файла только если открыто 2 или более окон (не считая dashboard и nvim-tree)
+                -- Показывать имя файла только если открыто 2 или более окон
+                -- Не учитываем dashboard, nvim-tree и всплывающие окна (noice, notify, lsp и т.д.)
                 local wins = vim.api.nvim_tabpage_list_wins(0)
                 local count = 0
                 for _, win in ipairs(wins) do
                   local buf = vim.api.nvim_win_get_buf(win)
                   local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-                  if ft ~= "dashboard" and ft ~= "NvimTree" then
+                  local win_config = vim.api.nvim_win_get_config(win)
+                  
+                  -- Пропускаем всплывающие окна и специальные буферы
+                  if ft ~= "dashboard" and ft ~= "NvimTree" and 
+                     ft ~= "noice" and ft ~= "notify" and
+                     not win_config.relative and -- не всплывающее окно
+                     not vim.api.nvim_win_get_option(win, "previewwindow") and -- не окно предпросмотра
+                     vim.api.nvim_buf_get_option(buf, "buftype") == "" then -- обычный буфер
                     count = count + 1
                   end
                 end
