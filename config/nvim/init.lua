@@ -20,7 +20,7 @@ vim.opt.si = true
 vim.opt.history = 700
 vim.opt.autoread = true
 vim.opt.so = 7
-vim.opt.lazyredraw = true
+vim.opt.lazyredraw = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.hlsearch = true
@@ -215,6 +215,164 @@ require("lazy").setup({
   },
   { "joshdick/onedark.vim", priority = 1000 },
   { "rakr/vim-one", priority = 1000 },
+  
+  -- Улучшенный UI с noice.nvim
+  { "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    config = function()
+      require("noice").setup({
+        lsp = {
+          -- Переопределение LSP документации
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+          hover = {
+            enabled = true,
+          },
+          signature = {
+            enabled = true,
+            auto_open = {
+              enabled = true,
+              trigger = true,
+              luasnip = true,
+              throttle = 50,
+            },
+          },
+        },
+        -- Настройка командной строки
+        cmdline = {
+          enabled = true,
+          view = "cmdline_popup", -- "cmdline" | "cmdline_popup"
+          opts = {}, -- Передается в view
+          format = {
+            -- Настройка конкретных типов командной строки
+            cmdline = { pattern = "^:", icon = "󰞷 ", lang = "vim" },
+            search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
+            search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+            filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+            lua = { pattern = { "^:%s*lua%s+", "^:%s*lua%s*=%s*", "^:%s*=%s*" }, icon = "", lang = "lua" },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = "󰋖 " },
+            input = {}, -- Используется при запросе ввода
+          },
+        },
+        -- Настройка сообщений
+        messages = {
+          enabled = true,
+          view = "notify", -- "notify" | "mini" | "split"
+          view_error = "notify", -- Вид для ошибок
+          view_warn = "notify", -- Вид для предупреждений
+          view_history = "messages", -- Вид для :messages
+          view_search = "virtualtext", -- Вид для результатов поиска
+        },
+        -- Настройка уведомлений
+        notify = {
+          enabled = true,
+          view = "notify",
+        },
+        -- Настройка всплывающих окон
+        popupmenu = {
+          enabled = true,
+          backend = "nui", -- "nui" | "cmp"
+        },
+        -- Настройка виртуального текста
+        views = {
+          cmdline_popup = {
+            position = {
+              row = 5,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = "auto",
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            filter_options = {},
+            win_options = {
+              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+            },
+          },
+          popupmenu = {
+            relative = "editor",
+            position = {
+              row = 8,
+              col = "50%",
+            },
+            size = {
+              width = 60,
+              height = 10,
+            },
+            border = {
+              style = "rounded",
+              padding = { 0, 1 },
+            },
+            win_options = {
+              winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+            },
+          },
+        },
+        routes = {
+          -- Скрытие сообщений о записи файла
+          {
+            filter = {
+              event = "msg_show",
+              kind = "",
+              find = "written",
+            },
+            opts = { skip = true },
+          },
+          -- Скрытие сообщений о поиске
+          {
+            filter = {
+              event = "msg_show",
+              kind = "search_count",
+            },
+            opts = { skip = true },
+          },
+        },
+        -- Настройка предпросмотра
+        presets = {
+          bottom_search = true, -- Использовать классический поиск снизу
+          command_palette = true, -- Палитра команд
+          long_message_to_split = true, -- Длинные сообщения в split
+          inc_rename = false, -- Включить inc_rename.nvim
+          lsp_doc_border = true, -- Добавить рамку к окнам документации
+        },
+      })
+    end
+  },
+  { "rcarriga/nvim-notify",
+    config = function()
+      require("notify").setup({
+        background_colour = "#000000",
+        fps = 60,
+        icons = {
+          DEBUG = "",
+          ERROR = "",
+          INFO = "",
+          TRACE = "✎",
+          WARN = ""
+        },
+        level = 2,
+        minimum_width = 50,
+        render = "default",
+        stages = "fade_in_slide_out",
+        timeout = 3000,
+        top_down = true
+      })
+
+      -- Установка notify как глобального уведомления
+      vim.notify = require("notify")
+    end
+  },
 
   -- Telescope для поиска файлов и текста
   { "nvim-telescope/telescope.nvim",
@@ -798,6 +956,12 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
   severity_sort = true,
+  float = {
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
 })
 
 -- Настройка значков для диагностики
@@ -806,6 +970,19 @@ for type, icon in pairs(signs) do
   local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
+
+-- Настройка окон документации LSP
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = "rounded",
+  }
+)
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+  vim.lsp.handlers.signature_help, {
+    border = "rounded",
+  }
+)
 
 -- Автокоманды
 vim.cmd([[
