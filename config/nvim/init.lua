@@ -793,7 +793,7 @@ require("lazy").setup({
     event = { "BufReadPost", "BufNewFile" },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "python", "bash", "yaml", "json", "markdown" },
+        ensure_installed = { "lua", "python", "bash", "yaml", "json", "markdown", "terraform", "hcl" },
         highlight = { enable = true },
         indent = { enable = true },
         additional_vim_regex_highlighting = false,
@@ -973,7 +973,7 @@ require("mason").setup({
 
 -- Интеграция Mason с lspconfig
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "pyright", "bashls", "yamlls" },
+  ensure_installed = { "lua_ls", "pyright", "bashls", "yamlls", "terraformls" },
   automatic_installation = true,
 })
 
@@ -1140,6 +1140,13 @@ lspconfig.bashls.setup {
    },
  }
 
+-- Terraform
+lspconfig.terraformls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  filetypes = { "terraform", "terraform-vars", "tf" },
+}
+
 -- Настройка диагностики
 vim.diagnostic.config({
   virtual_text = true,
@@ -1178,6 +1185,8 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
 -- Автокоманды
 vim.cmd([[
   autocmd BufNewFile,BufRead *.py set colorcolumn=80
+  autocmd BufNewFile,BufRead *.tf,*.tfvars set filetype=terraform
+  autocmd BufNewFile,BufRead *.hcl set filetype=hcl
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 ]])
 
