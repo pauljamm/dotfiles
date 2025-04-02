@@ -973,7 +973,7 @@ require("mason").setup({
 
 -- Интеграция Mason с lspconfig
 require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "pyright", "bashls", "yamlls", "terraformls" },
+  ensure_installed = { "lua_ls", "pyright", "bashls", "yamlls", "tflint" },
   automatic_installation = true,
 })
 
@@ -1140,8 +1140,8 @@ lspconfig.bashls.setup {
    },
  }
 
--- Terraform
-lspconfig.terraformls.setup {
+-- Terraform (используем tflint вместо terraformls)
+lspconfig.tflint.setup {
   capabilities = capabilities,
   on_attach = on_attach,
   filetypes = { "terraform", "terraform-vars", "tf" },
