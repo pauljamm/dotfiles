@@ -89,6 +89,7 @@ install_packages() {
   
   # Список программ для установки
   PACKAGES=(
+    # базовые пакеты
     "git"
     "npm"
     "neovim"
@@ -102,7 +103,9 @@ install_packages() {
     "gotop"
     "wget"
     "zsh"
+    # python tools
     "virtualenvwrapper"
+    # devops tools
     "kubectl"
     "helm"
     "colima"
