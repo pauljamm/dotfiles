@@ -225,11 +225,10 @@ install_packages() {
     log info "Установка категории: $category_name"
     
     # Получение списка пакетов для текущей категории
-    packages_array_name="${category^^}_PACKAGES"
-    packages_array=("$(get_packages_by_category "$category")")
+    packages_array=($(get_packages_by_category "$category"))
     
     # Установка пакетов
-    for package in ${packages_array[@]}; do
+    for package in "${packages_array[@]}"; do
       # Пропускаем пакет, если он в списке исключений
       if [[ " ${SKIP_PACKAGES[*]} " =~ " ${package} " ]]; then
         log warning "Пропуск пакета $package (указан в --skip-packages)"
