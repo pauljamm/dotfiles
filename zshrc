@@ -1,10 +1,19 @@
+# Выбор путей в зависимости от архитектуры процессора
+if [[ $(uname -m) == "arm64" ]]; then
+  # Пути для ARM архитектуры (Apple Silicon)
+  export HOMEBREW_PREFIX="/opt/homebrew"
+else
+  # Пути для x86 архитектуры (Intel)
+  export HOMEBREW_PREFIX="/usr/local"
+fi
+
 ZSH_TMUX_AUTOSTART="true"
 KEYTIMEOUT=1
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:$HOMEBREW_PREFIX/bin:$PATH
 export GOPATH=~/Code/go
 
-PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH/usr/local/opt/python/libexec/bin:$PATH:$GOPATH/bin:$HOME/Library/Python/3.9/bin:${HOME}/.krew/bin"
+PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH:$HOMEBREW_PREFIX/opt/python/libexec/bin:$PATH:$GOPATH/bin:$HOME/Library/Python/3.9/bin:${HOME}/.krew/bin"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -170,15 +179,6 @@ prompt_dir() {
 }
 
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-
-# Выбор путей в зависимости от архитектуры процессора
-if [[ $(uname -m) == "arm64" ]]; then
-  # Пути для ARM архитектуры (Apple Silicon)
-  export HOMEBREW_PREFIX="/opt/homebrew"
-else
-  # Пути для x86 архитектуры (Intel)
-  export HOMEBREW_PREFIX="/usr/local"
-fi
 
 # Использование HOMEBREW_PREFIX для путей
 source $HOMEBREW_PREFIX/bin/virtualenvwrapper.sh
