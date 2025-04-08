@@ -175,12 +175,13 @@ export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 if [[ $(uname -m) == "arm64" ]]; then
   # Пути для ARM архитектуры (Apple Silicon)
   export HOMEBREW_PREFIX="/opt/homebrew"
-  source /opt/homebrew/bin/virtualenvwrapper.sh
 else
   # Пути для x86 архитектуры (Intel)
   export HOMEBREW_PREFIX="/usr/local"
-  source /usr/local/bin/virtualenvwrapper.sh
 fi
+
+# Использование HOMEBREW_PREFIX для путей
+source $HOMEBREW_PREFIX/bin/virtualenvwrapper.sh
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
