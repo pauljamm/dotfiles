@@ -105,6 +105,9 @@ install_packages() {
     "virtualenvwrapper"
     "kubectl"
     "helm"
+    "colima"
+    "docker"
+    "minikube"
   )
   
   for package in "${PACKAGES[@]}"; do
