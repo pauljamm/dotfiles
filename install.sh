@@ -153,21 +153,59 @@ get_category_name() {
   esac
 }
 
+# Определение этапов установки
+define_installation_stages() {
+  # Все этапы установки
+  STAGES=("homebrew" "packages" "oh-my-zsh" "tmux" "zsh" "neovim")
+  STAGES_NAMES=("Установка Homebrew" "Установка пакетов" "Настройка Oh My Zsh" "Настройка Tmux" "Настройка ZSH" "Настройка Neovim")
+}
+
+# Функция для получения названия этапа
+get_stage_name() {
+  local stage=$1
+  case $stage in
+    "homebrew")
+      echo "Установка Homebrew"
+      ;;
+    "packages")
+      echo "Установка пакетов"
+      ;;
+    "oh-my-zsh")
+      echo "Настройка Oh My Zsh"
+      ;;
+    "tmux")
+      echo "Настройка Tmux"
+      ;;
+    "zsh")
+      echo "Настройка ZSH"
+      ;;
+    "neovim")
+      echo "Настройка Neovim"
+      ;;
+  esac
+}
+
 # Функция для вывода справки
 show_help() {
   echo "Использование: $0 [опции]"
   echo ""
-  echo "Опции:"
+  echo "Опции для выбора этапов установки:"
   echo "  -h, --help                 Показать эту справку"
+  echo "  -S, --stages STAGES        Выполнить только указанные этапы установки (через запятую)"
+  echo "                             Доступные этапы: homebrew, packages, oh-my-zsh, tmux, zsh, neovim"
+  echo "  --all-stages               Выполнить все этапы установки (по умолчанию)"
+  echo ""
+  echo "Опции для выбора пакетов (применяются только если выбран этап 'packages'):"
   echo "  -c, --categories CATS      Установить только указанные категории пакетов (через запятую)"
   echo "                             Доступные категории: base, dev, devops"
   echo "  -s, --skip-packages PKGS   Пропустить указанные пакеты (через запятую)"
   echo "  -a, --all                  Установить все пакеты (по умолчанию)"
   echo ""
   echo "Примеры:"
-  echo "  $0 --categories base,dev   Установить только базовые пакеты и инструменты разработки"
-  echo "  $0 --skip-packages docker,minikube   Установить все пакеты, кроме docker и minikube"
-  echo "  $0 --categories devops --skip-packages minikube   Установить все devops пакеты, кроме minikube"
+  echo "  $0 --stages homebrew,packages,zsh   Выполнить только установку Homebrew, пакетов и настройку ZSH"
+  echo "  $0 --stages packages --categories base,dev   Установить только базовые пакеты и инструменты разработки"
+  echo "  $0 --stages packages --skip-packages docker,minikube   Установить все пакеты, кроме docker и minikube"
+  echo "  $0 --stages packages --categories devops --skip-packages minikube   Установить все devops пакеты, кроме minikube"
 }
 
 # Установка программ через Homebrew
@@ -346,6 +384,7 @@ setup_neovim() {
 parse_args() {
   CATEGORIES_ARG=""
   SKIP_PACKAGES_ARG=""
+  STAGES_ARG=""
   
   while [[ $# -gt 0 ]]; do
     case $1 in
@@ -365,6 +404,14 @@ parse_args() {
         CATEGORIES_ARG=""
         shift
         ;;
+      -S|--stages)
+        STAGES_ARG="$2"
+        shift 2
+        ;;
+      --all-stages)
+        STAGES_ARG=""
+        shift
+        ;;
       *)
         shift
         ;;
@@ -377,27 +424,67 @@ main() {
   # Парсинг аргументов
   parse_args "$@"
 
+  # Определение этапов установки
+  define_installation_stages
+  
+  # Определение выбранных этапов установки
+  SELECTED_STAGES=()
+  
+  if [ -n "$STAGES_ARG" ]; then
+    IFS=',' read -r -a SELECTED_STAGES <<< "$STAGES_ARG"
+    
+    # Проверка валидности выбранных этапов
+    for stage in "${SELECTED_STAGES[@]}"; do
+      if [[ ! " ${STAGES[*]} " =~ " ${stage} " ]]; then
+        log error "Неизвестный этап установки: $stage"
+        echo "Доступные этапы: ${STAGES[*]}"
+        exit 1
+      fi
+    done
+  else
+    # Если этапы не выбраны, используем все
+    SELECTED_STAGES=("${STAGES[@]}")
+  fi
+
   log step "Начало установки dotfiles"
   
-  install_homebrew
-  
-  # Передача аргументов в функцию установки пакетов
-  if [ -n "$CATEGORIES_ARG" ]; then
-    if [ -n "$SKIP_PACKAGES_ARG" ]; then
-      install_packages --categories "$CATEGORIES_ARG" --skip-packages "$SKIP_PACKAGES_ARG"
-    else
-      install_packages --categories "$CATEGORIES_ARG"
-    fi
-  elif [ -n "$SKIP_PACKAGES_ARG" ]; then
-    install_packages --skip-packages "$SKIP_PACKAGES_ARG"
-  else
-    install_packages --all
-  fi
-  
-  setup_oh_my_zsh
-  setup_tmux
-  setup_zsh
-  setup_neovim
+  # Выполнение выбранных этапов установки
+  for stage in "${SELECTED_STAGES[@]}"; do
+    stage_name=$(get_stage_name "$stage")
+    log step "Выполнение этапа: $stage_name"
+    
+    case $stage in
+      "homebrew")
+        install_homebrew
+        ;;
+      "packages")
+        # Передача аргументов в функцию установки пакетов
+        if [ -n "$CATEGORIES_ARG" ]; then
+          if [ -n "$SKIP_PACKAGES_ARG" ]; then
+            install_packages --categories "$CATEGORIES_ARG" --skip-packages "$SKIP_PACKAGES_ARG"
+          else
+            install_packages --categories "$CATEGORIES_ARG"
+          fi
+        elif [ -n "$SKIP_PACKAGES_ARG" ]; then
+          install_packages --skip-packages "$SKIP_PACKAGES_ARG"
+        else
+          install_packages --all
+        fi
+        ;;
+      "oh-my-zsh")
+        setup_oh_my_zsh
+        ;;
+      "tmux")
+        setup_tmux
+        ;;
+      "zsh")
+        setup_zsh
+        ;;
+      "neovim")
+        setup_neovim
+        ;;
+    esac
+  done
   
   log step "Установка dotfiles завершена успешно!"
   log info "Пожалуйста, перезапустите терминал для применения всех изменений."
