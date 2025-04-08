@@ -66,10 +66,12 @@ install_homebrew() {
     log info "Установка Homebrew"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     
-    # Добавление Homebrew в PATH для текущей сессии
+    # Добавление Homebrew в PATH
     if [[ $(uname -m) == "arm64" ]]; then
+      echo 'eval $(/opt/homebrew/bin/brew shellenv)' >> /Users/$USER/.zprofile
       eval "$(/opt/homebrew/bin/brew shellenv)"
     else
+      echo 'eval $(/usr/local/bin/brew shellenv)' >> /Users/$USER/.zprofile
       eval "$(/usr/local/bin/brew shellenv)"
     fi
   else
@@ -88,6 +90,7 @@ install_packages() {
   # Список программ для установки
   PACKAGES=(
     "git"
+    "npm"
     "neovim"
     "tmux"
     "ripgrep"
@@ -129,6 +132,8 @@ setup_oh_my_zsh() {
   ZSH_PLUGINS=(
     "zsh-autosuggestions"
     "zsh-syntax-highlighting"
+    "zsh-kubectl-prompt"
+    "zsh-history-substring-search"
   )
   
   for plugin in "${ZSH_PLUGINS[@]}"; do
@@ -141,6 +146,12 @@ setup_oh_my_zsh() {
           ;;
         "zsh-syntax-highlighting")
           git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$plugin_dir"
+          ;;
+        "zsh-history-substring-search")
+          git clone https://github.com/zsh-users/zsh-history-substring-search.git "$plugin_dir"
+          ;;
+        "zsh-kubectl-prompt")
+          git clone https://github.com/superbrothers/zsh-kubectl-prompt.git "$plugin_dir"
           ;;
       esac
     else
