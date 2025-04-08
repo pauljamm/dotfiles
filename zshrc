@@ -170,9 +170,17 @@ prompt_dir() {
 }
 
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-# TODO: Add choice x86/arm
-source /usr/local/bin/virtualenvwrapper.sh
-source /opt/homebrew/bin/virtualenvwrapper.sh
+
+# Выбор путей в зависимости от архитектуры процессора
+if [[ $(uname -m) == "arm64" ]]; then
+  # Пути для ARM архитектуры (Apple Silicon)
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  source /opt/homebrew/bin/virtualenvwrapper.sh
+else
+  # Пути для x86 архитектуры (Intel)
+  export HOMEBREW_PREFIX="/usr/local"
+  source /usr/local/bin/virtualenvwrapper.sh
+fi
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
