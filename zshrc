@@ -170,7 +170,9 @@ prompt_dir() {
 }
 
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+# TODO: Add choice x86/arm
 source /usr/local/bin/virtualenvwrapper.sh
+source /opt/homebrew/bin/virtualenvwrapper.sh
 
 source $HOME/.oh-my-zsh/custom/plugins/yc/yc.zsh
 
