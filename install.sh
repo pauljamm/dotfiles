@@ -83,17 +83,14 @@ install_homebrew() {
   brew update
 }
 
-# Установка программ через Homebrew
-install_packages() {
-  log step "Установка необходимых программ"
-  
-  # Список программ для установки
-  PACKAGES=(
-    # базовые пакеты
+# Определение категорий пакетов
+define_package_categories() {
+  # Базовые пакеты
+  BASE_PACKAGES=(
     "git"
-    "npm"
     "neovim"
     "tmux"
+    "npm"
     "ripgrep"
     "fd"
     "fzf"
@@ -103,9 +100,15 @@ install_packages() {
     "gotop"
     "wget"
     "zsh"
-    # python tools
+  )
+  
+  # Пакеты для разработки
+  DEV_PACKAGES=(
     "virtualenvwrapper"
-    # devops tools
+  )
+  
+  # DevOps инструменты
+  DEVOPS_PACKAGES=(
     "kubectl"
     "helm"
     "colima"
@@ -113,13 +116,133 @@ install_packages() {
     "minikube"
   )
   
-  for package in "${PACKAGES[@]}"; do
-    if brew list "$package" &>/dev/null; then
-      log info "$package уже установлен"
-    else
-      log info "Установка $package"
-      brew install "$package"
+  # Все категории для выбора
+  CATEGORIES=("base" "dev" "devops")
+  CATEGORIES_NAMES=("Базовые пакеты" "Инструменты разработки" "DevOps инструменты")
+}
+
+# Функция для получения списка пакетов по имени категории
+get_packages_by_category() {
+  local category=$1
+  case $category in
+    "base")
+      echo "${BASE_PACKAGES[@]}"
+      ;;
+    "dev")
+      echo "${DEV_PACKAGES[@]}"
+      ;;
+    "devops")
+      echo "${DEVOPS_PACKAGES[@]}"
+      ;;
+  esac
+}
+
+# Функция для получения названия категории
+get_category_name() {
+  local category=$1
+  case $category in
+    "base")
+      echo "Базовые пакеты"
+      ;;
+    "dev")
+      echo "Инструменты разработки"
+      ;;
+    "devops")
+      echo "DevOps инструменты"
+      ;;
+  esac
+}
+
+# Функция для вывода справки
+show_help() {
+  echo "Использование: $0 [опции]"
+  echo ""
+  echo "Опции:"
+  echo "  -h, --help                 Показать эту справку"
+  echo "  -c, --categories CATS      Установить только указанные категории пакетов (через запятую)"
+  echo "                             Доступные категории: base, dev, devops"
+  echo "  -s, --skip-packages PKGS   Пропустить указанные пакеты (через запятую)"
+  echo "  -a, --all                  Установить все пакеты (по умолчанию)"
+  echo ""
+  echo "Примеры:"
+  echo "  $0 --categories base,dev   Установить только базовые пакеты и инструменты разработки"
+  echo "  $0 --skip-packages docker,minikube   Установить все пакеты, кроме docker и minikube"
+  echo "  $0 --categories devops --skip-packages minikube   Установить все devops пакеты, кроме minikube"
+}
+
+# Установка программ через Homebrew
+install_packages() {
+  log step "Установка необходимых программ"
+  
+  # Определение категорий пакетов
+  define_package_categories
+  
+  # Парсинг аргументов командной строки
+  SELECTED_CATEGORIES=()
+  SKIP_PACKAGES=()
+  
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -h|--help)
+        show_help
+        exit 0
+        ;;
+      -c|--categories)
+        IFS=',' read -r -a SELECTED_CATEGORIES <<< "$2"
+        shift 2
+        ;;
+      -s|--skip-packages)
+        IFS=',' read -r -a SKIP_PACKAGES <<< "$2"
+        shift 2
+        ;;
+      -a|--all)
+        SELECTED_CATEGORIES=("${CATEGORIES[@]}")
+        shift
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+  
+  # Если категории не выбраны, используем все
+  if [ ${#SELECTED_CATEGORIES[@]} -eq 0 ]; then
+    SELECTED_CATEGORIES=("${CATEGORIES[@]}")
+  fi
+  
+  # Проверка валидности выбранных категорий
+  for category in "${SELECTED_CATEGORIES[@]}"; do
+    if [[ ! " ${CATEGORIES[*]} " =~ " ${category} " ]]; then
+      log error "Неизвестная категория: $category"
+      echo "Доступные категории: ${CATEGORIES[*]}"
+      exit 1
     fi
+  done
+  
+  # Установка пакетов по категориям
+  for category in "${SELECTED_CATEGORIES[@]}"; do
+    category_name=$(get_category_name "$category")
+    log info "Установка категории: $category_name"
+    
+    # Получение списка пакетов для текущей категории
+    packages_array_name="${category^^}_PACKAGES"
+    packages_array=("$(get_packages_by_category "$category")")
+    
+    # Установка пакетов
+    for package in ${packages_array[@]}; do
+      # Пропускаем пакет, если он в списке исключений
+      if [[ " ${SKIP_PACKAGES[*]} " =~ " ${package} " ]]; then
+        log warning "Пропуск пакета $package (указан в --skip-packages)"
+        continue
+      fi
+      
+      if brew list "$package" &>/dev/null; then
+        log info "$package уже установлен"
+      else
+        log info "Установка $package"
+        brew install "$package"
+      fi
+    done
   done
 }
 
@@ -220,12 +343,58 @@ setup_neovim() {
   nvim --headless "+Lazy! sync" +qa
 }
 
+# Парсинг аргументов командной строки
+parse_args() {
+  CATEGORIES_ARG=""
+  SKIP_PACKAGES_ARG=""
+  
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -h|--help)
+        show_help
+        exit 0
+        ;;
+      -c|--categories)
+        CATEGORIES_ARG="$2"
+        shift 2
+        ;;
+      -s|--skip-packages)
+        SKIP_PACKAGES_ARG="$2"
+        shift 2
+        ;;
+      -a|--all)
+        CATEGORIES_ARG=""
+        shift
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+}
+
 # Основная функция
 main() {
+  # Парсинг аргументов
+  parse_args "$@"
+
   log step "Начало установки dotfiles"
   
   install_homebrew
-  install_packages
+  
+  # Передача аргументов в функцию установки пакетов
+  if [ -n "$CATEGORIES_ARG" ]; then
+    if [ -n "$SKIP_PACKAGES_ARG" ]; then
+      install_packages --categories "$CATEGORIES_ARG" --skip-packages "$SKIP_PACKAGES_ARG"
+    else
+      install_packages --categories "$CATEGORIES_ARG"
+    fi
+  elif [ -n "$SKIP_PACKAGES_ARG" ]; then
+    install_packages --skip-packages "$SKIP_PACKAGES_ARG"
+  else
+    install_packages --all
+  fi
+  
   setup_oh_my_zsh
   setup_tmux
   setup_zsh
@@ -235,5 +404,5 @@ main() {
   log info "Пожалуйста, перезапустите терминал для применения всех изменений."
 }
 
-# Запуск основной функции
-main
+# Запуск основной функции с передачей всех аргументов
+main "$@"
